@@ -1,11 +1,14 @@
 py-radix
 ========
 
-.. image:: https://travis-ci.org/mjschultz/py-radix.svg?branch=master
-   :target: https://travis-ci.org/mjschultz/py-radix
+Fork of the original library to reduce the memory footprint of the C implementation.
 
-.. image:: https://coveralls.io/repos/mjschultz/py-radix/badge.png?branch=master
-   :target: https://coveralls.io/r/mjschultz/py-radix?branch=master
+The following attributes have been converted to properties and will be computed at query time:
+
+  * network
+  * prefix
+
+The `data` object is now `None` by default instead of being an empty dict. It can be used to store any type of data.
 
 py-radix implements the radix tree data structure for the storage and
 retrieval of IPv4 and IPv6 network prefixes.
@@ -37,6 +40,7 @@ Usage
 
 A simple example that demonstrates most of the features: ::
 
+	import socket
 	import radix
 
 	# Create a new tree
@@ -45,7 +49,7 @@ A simple example that demonstrates most of the features: ::
 	# Adding a node returns a RadixNode object. You can create
 	# arbitrary members in its 'data' dict to store your data
 	rnode = rtree.add("10.0.0.0/8")
-	rnode.data["blah"] = "whatever you want"
+	rnode.data = {"blah": "whatever you want"}
 
 	# You can specify nodes as CIDR addresses, or networks with
 	# separate mask lengths. The following three invocations are
@@ -59,16 +63,16 @@ A simple example that demonstrates most of the features: ::
 	# functions. In this case, the radix module will assume that
 	# a four-byte address is an IPv4 address and a sixteen-byte
 	# address is an IPv6 address. For example:
-	binary_addr = inet_ntoa("172.18.22.0")
+	binary_addr = socket.inet_aton("172.18.22.0")
 	rnode = rtree.add(packed = binary_addr, masklen = 23)
 
 	# Exact search will only return prefixes you have entered
 	# You can use all of the above ways to specify the address
 	rnode = rtree.search_exact("10.0.0.0/8")
 	# Get your data back out
-	print rnode.data["blah"]
+	print(rnode.data["blah"])
 	# Use a packed address
-	addr = socket.inet_ntoa("10.0.0.0")
+	addr = socket.inet_aton("10.0.0.0")
 	rnode = rtree.search_exact(packed = addr, masklen = 8)
 
 	# Best-match search will return the longest matching prefix
@@ -85,11 +89,11 @@ A simple example that demonstrates most of the features: ::
 	rnodes = rtree.search_covered("10.123.0.0/16")
 
 	# There are a couple of implicit members of a RadixNode:
-	print rnode.network	# -> "10.0.0.0"
-	print rnode.prefix	# -> "10.0.0.0/8"
-	print rnode.prefixlen	# -> 8
-	print rnode.family	# -> socket.AF_INET
-	print rnode.packed	# -> '\n\x00\x00\x00'
+	print(rnode.network)     # -> "10.0.0.0"
+	print(rnode.prefix)      # -> "10.0.0.0/8"
+	print(rnode.prefixlen)   # -> 8
+	print(rnode.family)      # -> socket.AF_INET
+	print(rnode.packed)      # -> '\n\x00\x00\x00'
 
 	# IPv6 prefixes are fully supported in the same tree
 	rnode = rtree.add("2001:DB8::/3")
@@ -98,7 +102,7 @@ A simple example that demonstrates most of the features: ::
 	# Use the nodes() method to return all RadixNodes created
 	nodes = rtree.nodes()
 	for rnode in nodes:
-		print rnode.prefix
+		print(rnode.prefix)
 
 	# The prefixes() method will return all the prefixes (as a
 	# list of strings) that have been entered
@@ -111,7 +115,7 @@ A simple example that demonstrates most of the features: ::
 	# receive a RuntimeWarning. Changing a node's data dict
 	# is permitted.
 	for rnode in rtree:
-  		print rnode.prefix
+		print(rnode.prefix)
 
 
 License
