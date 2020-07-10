@@ -34,10 +34,10 @@ if sys.version_info < (2, 7):
 
 setup(
     name='py-radix',
-    version='0.10.0',
-    maintainer='Michael J. Schultz',
-    maintainer_email='mjschultz@gmail.com',
-    url='https://github.com/mjschultz/py-radix',
+    version='1.0.0',
+    maintainer='Raphael Cohen',
+    maintainer_email='raphael.cohen@sekoia.fr',
+    url='https://github.com/SEKOIA-IO/py-radix',
     description='Radix tree implementation',
     long_description=README,
     license='BSD',

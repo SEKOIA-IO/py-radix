@@ -3,7 +3,7 @@ try:
 except Exception as e:
     from .radix import Radix as _Radix
 
-__version__ = '0.10.0'
+__version__ = '1.0.0'
 __all__ = ['Radix']
 
 
