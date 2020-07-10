@@ -3,7 +3,7 @@ py-radix
 
 Fork of the original library to reduce the memory footprint of the C implementation.
 
-In order to reduce the memory usage the following attributes have been removed from the `Node` objects:
+The following attributes have been converted to properties and will be computed at query time:
 
   * network
   * prefix
@@ -42,7 +42,6 @@ A simple example that demonstrates most of the features: ::
 
 	import socket
 	import radix
-
 
 	# Create a new tree
 	rtree = radix.Radix()
@@ -90,9 +89,11 @@ A simple example that demonstrates most of the features: ::
 	rnodes = rtree.search_covered("10.123.0.0/16")
 
 	# There are a couple of implicit members of a RadixNode:
-	print(rnode.family)	# -> socket.AF_INET
-	print(rnode.packed)	# -> '\n\x00\x00\x00'
-	print(rnode.data)  # -> {'blah': 'whatever you want'}
+	print(rnode.network)     # -> "10.0.0.0"
+	print(rnode.prefix)      # -> "10.0.0.0/8"
+	print(rnode.prefixlen)   # -> 8
+	print(rnode.family)      # -> socket.AF_INET
+	print(rnode.packed)      # -> '\n\x00\x00\x00'
 
 	# IPv6 prefixes are fully supported in the same tree
 	rnode = rtree.add("2001:DB8::/3")
@@ -101,7 +102,11 @@ A simple example that demonstrates most of the features: ::
 	# Use the nodes() method to return all RadixNodes created
 	nodes = rtree.nodes()
 	for rnode in nodes:
-		print(rnode.packed)
+		print(rnode.prefix)
+
+	# The prefixes() method will return all the prefixes (as a
+	# list of strings) that have been entered
+	prefixes = rtree.prefixes()
 
 	# You can also directly iterate over the tree itself
 	# this would save some memory if the tree is big
@@ -110,7 +115,7 @@ A simple example that demonstrates most of the features: ::
 	# receive a RuntimeWarning. Changing a node's data dict
 	# is permitted.
 	for rnode in rtree:
-		print(rnode.packed)
+		print(rnode.prefix)
 
 
 License

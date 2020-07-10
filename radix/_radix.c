@@ -125,6 +125,22 @@ Radix_parent(RadixNodeObject *self, void *closure)
         }
         Py_RETURN_NONE;
 }
+static PyObject *
+Radix_prefix(RadixNodeObject *self, void *closure)
+{
+        char buf[256];
+        return PyString_FromString(
+                prefix_ntop(self->rn->prefix, buf, sizeof(buf))
+        );
+}
+static PyObject *
+Radix_network(RadixNodeObject *self, void *closure)
+{
+        char buf[256];
+        return PyString_FromString(
+                prefix_addr_ntop(self->rn->prefix, buf, sizeof(buf))
+        );
+}
 static PyMemberDef RadixNode_members[] = {
         {"data",        T_OBJECT, offsetof(RadixNodeObject, user_attr), 0},
         {"prefixlen",   T_OBJECT, offsetof(RadixNodeObject, prefixlen), READONLY},
@@ -138,6 +154,18 @@ static PyGetSetDef node_getter[] = {
          (getter) Radix_parent,      /* C function to get the attribute */
          NULL,                       /* C function to set the attribute */
          "parent of node",           /* optional doc string */
+         NULL                        /* optional additional data for getter and setter */
+        },
+        {"prefix",
+         (getter) Radix_prefix,      /* C function to get the attribute */
+         NULL,                       /* C function to set the attribute */
+         "Node prefix",              /* optional doc string */
+         NULL                        /* optional additional data for getter and setter */
+        },
+        {"network",
+         (getter) Radix_network,      /* C function to get the attribute */
+         NULL,                       /* C function to set the attribute */
+         "Node network",              /* optional doc string */
          NULL                        /* optional additional data for getter and setter */
         },
         {NULL}  /* Sentinel */
