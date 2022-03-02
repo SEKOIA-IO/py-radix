@@ -14,6 +14,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#define PY_SSIZE_T_CLEAN
 #include "Python.h"
 #include "structmember.h"
 #include "_radix/radix.h"
@@ -269,7 +270,7 @@ Radix_dealloc(RadixObject *self)
 }
 
 static prefix_t
-*args_to_prefix(prefix_t *prefix, char *addr, char *packed, int packlen, long prefixlen)
+*args_to_prefix(prefix_t *prefix, char *addr, char *packed, Py_ssize_t packlen, long prefixlen)
 {
         prefix_t *old_prefix = prefix;
         const char *errmsg;
@@ -365,7 +366,7 @@ Radix_add(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:add", keywords,
             &addr, &prefixlen, &packed, &packlen))
@@ -394,7 +395,7 @@ Radix_delete(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:delete", keywords,
             &addr, &prefixlen, &packed, &packlen))
@@ -437,7 +438,7 @@ Radix_search_exact(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:search_exact", keywords,
             &addr, &prefixlen, &packed, &packlen))
@@ -475,7 +476,7 @@ Radix_search_best(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:search_best", keywords,
             &addr, &prefixlen, &packed, &packlen))
@@ -513,7 +514,7 @@ Radix_search_worst(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:search_worst", keywords,
             &addr, &prefixlen, &packed, &packlen))
@@ -556,7 +557,7 @@ Radix_search_covered(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:search_covered", keywords, &addr, &prefixlen, &packed, &packlen))
                 return NULL;
@@ -589,7 +590,7 @@ Radix_search_covering(RadixObject *self, PyObject *args, PyObject *kw_args)
 
         char *addr = NULL, *packed = NULL;
         long prefixlen = -1;
-        int packlen = -1;
+        Py_ssize_t packlen = -1;
 
         if (!PyArg_ParseTupleAndKeywords(args, kw_args, "|zlz#:search_covering", keywords, &addr, &prefixlen, &packed, &packlen)) {
                 return NULL;
