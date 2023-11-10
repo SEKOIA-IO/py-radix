@@ -32,8 +32,7 @@ class Radix(object):
     def __setstate__(self, state):
         for prefix, data in state:
             node = self._radix.add(prefix)
-            for key in data:
-                node.data[key] = data[key]
+            node.data = data
 
     def __reduce__(self):
         return (Radix, (), self.__getstate__())
