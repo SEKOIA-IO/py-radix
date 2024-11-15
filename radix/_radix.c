@@ -65,7 +65,7 @@ newRadixNodeObject(radix_node_t *rn)
         RadixNodeObject *self;
 
         /* Sanity check */
-        if (rn == NULL || rn->prefix == NULL || 
+        if (rn == NULL || rn->prefix == NULL ||
             (rn->prefix->family != AF_INET && rn->prefix->family != AF_INET6))
                 return NULL;
 
@@ -172,7 +172,7 @@ static PyGetSetDef node_getter[] = {
         {NULL}  /* Sentinel */
 };
 
-PyDoc_STRVAR(RadixNode_doc, 
+PyDoc_STRVAR(RadixNode_doc,
 "Node in a radix tree");
 
 static PyTypeObject RadixNode_Type = {
@@ -293,7 +293,7 @@ static prefix_t
                             "Invalid address format");
                 }
         } else if (packed != NULL) {    /* "parse" a packed binary address */
-                if ((prefix = prefix_from_blob_ex(prefix, (u_char*)packed, packlen, 
+                if ((prefix = prefix_from_blob_ex(prefix, (u_char*)packed, packlen,
                     prefixlen)) == NULL) {
                         PyErr_SetString(PyExc_ValueError,
                             "Invalid packed address format");
@@ -322,7 +322,7 @@ create_add_node(RadixObject *self, prefix_t *prefix)
 
         /*
          * Create a RadixNode object in the data area of the node
-         * We duplicate most of the node's identity, because the radix.c:node 
+         * We duplicate most of the node's identity, because the radix.c:node
          * itself has a lifetime independent of the Python node object
          * Confusing? yeah...
          */
@@ -484,7 +484,7 @@ Radix_search_best(RadixObject *self, PyObject *args, PyObject *kw_args)
         if ((prefix = args_to_prefix(&lprefix, addr, packed, packlen, prefixlen)) == NULL)
                 return NULL;
 
-        if ((node = radix_search_best(self->rt, prefix)) == NULL || 
+        if ((node = radix_search_best(self->rt, prefix)) == NULL ||
             node->data == NULL) {
                 Py_INCREF(Py_None);
                 return Py_None;
@@ -522,7 +522,7 @@ Radix_search_worst(RadixObject *self, PyObject *args, PyObject *kw_args)
         if ((prefix = args_to_prefix(&lprefix, addr, packed, packlen, prefixlen)) == NULL)
                 return NULL;
 
-        if ((node = radix_search_worst(self->rt, prefix)) == NULL || 
+        if ((node = radix_search_worst(self->rt, prefix)) == NULL ||
             node->data == NULL) {
                 Py_INCREF(Py_None);
                 return Py_None;
@@ -661,7 +661,10 @@ Radix_prefixes(RadixObject *self, PyObject *args)
                         PyObject *prefix = PyString_FromString(
                                 prefix_ntop(node->prefix, buf, sizeof(buf))
                         );
-                        PyList_Append(ret, prefix);
+                        if (prefix != NULL) {
+                            PyList_Append(ret, prefix);
+                            Py_XDECREF(prefix);
+                        }
                 }
         } RADIX_TREE_WALK_END;
 
@@ -823,7 +826,7 @@ RadixIter_iternext(RadixIterObject *self)
         return (ret);
 }
 
-PyDoc_STRVAR(RadixIter_doc, 
+PyDoc_STRVAR(RadixIter_doc,
 "Radix tree iterator");
 
 static PyTypeObject RadixIter_Type = {

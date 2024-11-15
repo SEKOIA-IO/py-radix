@@ -34,7 +34,7 @@ if sys.version_info < (2, 7):
 
 setup(
     name='py-radix',
-    version='1.0.1',
+    version='1.0.2',
     maintainer='Raphael Cohen',
     maintainer_email='raphael.cohen@sekoia.fr',
     url='https://github.com/SEKOIA-IO/py-radix',
